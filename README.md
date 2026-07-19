@@ -1,12 +1,4 @@
-# AutoEwt
-
-## 协议与声明
-
-- 本软件遵循 [GNU General Public License v3.0](LICENSE) 开源许可证。
-- **本软件的目的仅在研究 `Python` 技术，您不得使用它来应付学校的任务，或是做其他违反纪律、法律的事。**
-- **如果您擅自使用本软件做不当的事，产生的任何后果和影响均由您自己承担，与我们无关。**
-- **开始使用本软件即代表您同意上述协议和声明，同意 [着火的冰块nya](https://space.bilibili.com/551409211)
-  及其他开发者不为您的行为承担任何责任。**
+# AutoEwt Fiexed by [しょうてん](https://github.com/Akiyama-25)
 
 ## 相对于原项目的调整
 
@@ -15,12 +7,23 @@
 ### Bug 修复
 
 - **修复跨天课程识别为空的问题**：原版 `finish_days_list()` 在循环前一次性缓存所有天数元素，完成一天后页面 DOM 重新渲染导致后续元素引用失效（stale element），使得下一天的课程被识别为 0 节并跳过。现在每次循环重新查询天数列表。
-- **抑制 GCM 推送通知反复注册**：e网通平台的 Service Worker 使用了已废弃的 GCM 接口，浏览器加载页面时反复尝试注册。通过添加 `--disable-features=PushMessaging` 等 Chrome 启动参数，从内核层面禁用 Push API，消除 `DEPRECATED_ENDPOINT` 错误。
 
 ### 功能改进
 
 - **CDP 原生鼠标事件点击**：`click()` 方法改用 Chrome DevTools Protocol 的 `Input.dispatchMouseEvent`，模拟 `isTrusted=true` 的真实鼠标事件，绕过 e网通平台对自动化点击的检测。
-- **驱动自动查找**：`config.yml` 中 `driver_path` 设置为 `auto` 时，程序自动在同一目录下查找对应浏览器的驱动（Chrome → `chromedriver-win64/chromedriver.exe`，Edge → `msedgedriver.exe`）。
+- **驱动自动查找**：`config.yml` 中 `driver_path` 设置为 `auto` 时，程序自动在同一目录下查找对应浏览器的驱动（Chrome → `chromedriver-win64/chromedriver.exe`，Edge → `msedgedriver.exe`）。当然自定义也可以。
+
+
+## 下面的描述基本复制自原项目自述文件
+当然我有意地保留了自己的话，~~还是废话~~
+另外，试卷部分我没有测试，不保证可以正常使用
+
+## 协议与声明
+
+- 本软件遵循 [GNU General Public License v3.0](LICENSE) 开源许可证。
+- **本软件的目的仅在研究 `Python` 技术，您不得使用它来应付学校的任务，或是做其他违反纪律、法律的事。**
+- **如果您擅自使用本软件做不当的事，产生的任何后果和影响均由您自己承担，与我们无关。**
+- **开始使用本软件即代表您同意上述协议和声明，同意原作者 [着火的冰块nya](https://space.bilibili.com/551409211) 与本人及其他开发者不为您的行为承担任何责任。**
 
 ## 如何使用
 
@@ -31,7 +34,7 @@
 
 请打开您的浏览器，查看它的版本。
 
-然后下载**对应版本**的浏览器驱动，解压后放在您喜欢的位置。
+然后下载**对应版本**的浏览器驱动，**解压**后放在您喜欢的位置。非对应版本可嫩导致该脚本无法正常运作。
 
 以下是一些您可能用得到的链接：
 
@@ -84,7 +87,7 @@ options: --mute-audio
 ```
 
 > [!NOTE]
-> 填写 `driver_path` 字段时，您可能会使用 Windows 11 右键菜单的“复制文件地址”，这样得到的路径是带引号的。请**删除引号**~~或在左引号前加上 `r` 或把每个 `\` 都换成 `\\`~~。
+> 填写 `driver_path` 字段时，您可能会使用 Windows 11 右键菜单的“复制文件地址”或是使用快捷键**Ctrl+Shift+C**，这样得到的路径是**带引号的**。请**删除引号**。
 
 ### 3. 启动！
 
@@ -96,8 +99,10 @@ options: --mute-audio
 > 该 bug 作用机理尚不明确，难以稳定复现，且不存在任何日志记录，无法修复，见谅。
 > 
 > 如果您找到了稳定复现的方法，欢迎提 issue 报告。
+>
+> ~~当然[しょうてん](https://github.com/Akiyama-25)这条区没测试~~
 
 ## 开发环境
 
 - Python 3.10
-- Chrome 138
+- Chrome 150.0.7871.125 64位
