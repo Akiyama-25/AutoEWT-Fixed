@@ -2,7 +2,6 @@
 # 此模块用于存储通用的工具函数
 #
 
-import sys
 import os
 import logging
 import time
@@ -47,23 +46,15 @@ def read_config() -> dict:
             logging.info('配置文件中未设置 delay_multiplier，将使用默认值 1.0')
             config['delay_multiplier'] = 1.0
         logging.info('成功读取到配置文件')
-    # 自动查找驱动
-    if config.get('driver_path') == 'auto':
-        if getattr(sys, 'frozen', False):
-            base_dir = os.path.dirname(sys.executable)
-        else:
-            base_dir = os.path.dirname(os.path.abspath(__file__))
-        browser_lower = config['browser'].lower()
-        if browser_lower == 'chrome':
-            config['driver_path'] = os.path.join(base_dir, 'chromedriver-win64', 'chromedriver.exe')
-        elif browser_lower == 'edge':
-            config['driver_path'] = os.path.join(base_dir, 'msedgedriver.exe')
-        else:
-            config['driver_path'] = os.path.join(base_dir, f'{browser_lower}driver.exe')
-        if not os.path.exists(config['driver_path']):
-            logging.error(f'自动查找驱动失败: {config["driver_path"]} 不存在')
-            exit(1)
-        logging.info(f'自动查找驱动: {config["driver_path"]}')
+    # 校验驱动路径
+    driver_path = config.get('driver_path')
+    if not driver_path or driver_path == 'auto':
+        logging.error('请在 config.yml 中手动指定 driver_path（浏览器驱动的完整路径）')
+        exit(1)
+    if not os.path.exists(driver_path):
+        logging.error(f'驱动文件不存在: {driver_path}')
+        exit(1)
+    logging.info(f'使用驱动: {driver_path}')
     return config
 
 

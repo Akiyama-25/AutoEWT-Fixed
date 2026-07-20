@@ -91,22 +91,29 @@ class AutoVideo(AutoBase):
 
                 time.sleep(1 * self.config.get('delay_multiplier'))
 
-                # 防止意外暂停
-                self._resume_if_paused(video)
+                # 防止意外暂停，且检测播放完成被暂停的情况
+                if self._check_completed_and_paused(video):
+                    break
 
         logging.info('好诶~ 完成啦~')
 
         self.close_and_switch()
 
-    def _resume_if_paused(self, video: WebElement) -> None:
+    def _check_completed_and_paused(self, video: WebElement) -> bool:
         """
-        检查视频是否被暂停，如果暂停则恢复播放
-        https://github.com/zhdbk3/AutoEwt/pull/12/changes/46ac6a7e68f0724df552be6081b241e2f09173c7#diff-7e8f19105f96cbaa19843e7461b4b68b16d6cfedf1629ca0fc37772a4bb3936dR193-R203
+        检查视频是否因播放完成而被暂停（进度>=99%且处于暂停状态），
+        若满足两个条件则视为完成并返回 True；否则恢复播放并返回 False
         """
         try:
             paused = self.driver.execute_script('return arguments[0].paused;', video)
             if paused:
+                current_time = self.driver.execute_script('return arguments[0].currentTime;', video)
+                duration = self.driver.execute_script('return arguments[0].duration;', video)
+                if duration > 0 and current_time / duration >= 0.95:
+                    logging.info(f'视频进度 {current_time/duration*100:.1f}% 且已暂停，视为播放完成')
+                    return True
                 self.driver.execute_script('arguments[0].play();', video)
                 logging.info('视频被暂停，已恢复播放')
         except:
             pass
+        return False
