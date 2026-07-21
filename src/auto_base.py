@@ -142,10 +142,13 @@ class AutoBase(ABC):
 
     def close_and_switch(self) -> None:
         """关闭当前页面并返回到首页"""
-        handles = self.driver.window_handles
-        self.driver.close()
-        self.driver.switch_to.window(handles[0])
-        time.sleep(1 * self.config.get('delay_multiplier'))
+        try:
+            handles = self.driver.window_handles
+            self.driver.close()
+            self.driver.switch_to.window(handles[0])
+            time.sleep(1 * self.config.get('delay_multiplier'))
+        except Exception:
+            logging.warning('关闭页面时浏览器连接已断开')
 
     def finish_days_list(self) -> None:
         """完成所有天"""

@@ -177,3 +177,4 @@ _internal/
 chromedriver-win64/
 *.zip
 /src/chrome-win64
+CLAUDE.md

@@ -55,7 +55,21 @@ class AutoVideo(AutoBase):
         self.click_and_switch(btn)
 
         video = self.driver.find_element(By.TAG_NAME, 'video')
-        duration = self.driver.execute_script("return arguments[0].duration", video)
+
+        # 等待视频元数据加载（duration 有效且 > 0）
+        max_wait = 15
+        duration = None
+        for _ in range(max_wait):
+            duration = self.driver.execute_script(
+                "var d = arguments[0].duration; return isNaN(d) || !isFinite(d) ? null : d;", video
+            )
+            if duration is not None and duration > 0:
+                break
+            time.sleep(1)
+
+        if duration is None or duration <= 0:
+            raise RuntimeError(f"视频元数据加载超时（{max_wait}秒），duration={duration}")
+
         logging.info(f"当前视频总时长: {int(duration)} 秒")
 
         # 有时需要手动点播放
