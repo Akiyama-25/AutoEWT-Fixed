@@ -2,6 +2,10 @@
 
 基于 [zhdbk3/AutoEwt v0.8](https://github.com/zhdbk3/AutoEwt) 的修改版本，由 [しょうてん](https://github.com/Akiyama-25) 改进。
 
+## 温馨提醒
+
+EWT360有反作弊机制，若用户被标记后（isBlacklisted=true），点击检查点功能将会失效，需要用户手动通过滑动验证。
+
 ## 相对于原项目的修改
 
 ### Bug 修复
